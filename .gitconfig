@@ -1,0 +1,157 @@
+[alias]
+    ### History
+    # Commit History
+    ls = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --date=relative
+    # Commit History w/ modified files
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    lb = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'
+    # Commit History for file
+    fl = log -u
+    st = status
+    sts = status -s
+    shf = "!f() { git show $1:$2; }; f"
+    blame-line = "!f() { if [ $# -ne 2 ]; then echo 'git blame-line <line-num> <file>'; else git log -L $1,$1:$2; fi }; f"
+    reset-to-target = "!f() { (git reset $(git merge-base $1 $(git rev-parse --abbrev-ref HEAD))) }; f"
+
+    diffs = diff --staged
+
+    ### Remote
+    fo = fetch origin --prune
+    fet = fetch --all --prune
+    aor = remote add origin
+    ror = remote remove origin
+    pro = remote prune origin
+
+    ### Branches
+    bra = for-each-ref --sort=committerdate --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+    br = !git bra refs/heads/
+    brs = branch
+    brr = "!f() { git branch -r | grep $@; }; f"
+    brd = branch -D
+    cl = clone
+    co = "!f() { git checkout ${1-master}; git mods; }; f"
+    coc = checkout
+    cob = checkout -b
+    # Get the current branch name
+    branch-name = rev-parse --abbrev-ref HEAD
+    upstream-name = rev-parse --abbrev-ref --symbolic-full-name @{u}
+    my-branches = !git branch -r | grep $USER
+    bclean = "!f() { git checkout ${1-master} && git branch --merged ${1-master} | grep -v " ${1-master}" | xargs git branch -d; }; f"
+    bdone = "!f() { git bclean ${1-master}; git pully; }; f"
+
+    # Worktrees
+    wta = worktree add
+    wtl = worktree list
+    wtp = worktree prune
+    
+    ### Commit
+    aa = add -A
+    au = add -u
+    ca = commit --amend --no-edit
+    cae = commit --amend
+    ci = commit
+    cm = commit -m
+    cma = !git add -A && git commit -m
+    cmat = !git commit -am
+    wip = commit -am "WiP"
+    cp = cherry-pick
+    cpa = cherry-pick --abort
+    cpc = cherry-pick --continue
+
+    undo = reset HEAD~1 --mixed
+
+    r = reset
+    rs = reset --soft
+    rh = !git add -A && git commit -qnm \"HARD RESET\" && git reset HEAD~1 --hard
+    rhp = reset --hard
+    ru = !git ssu && git sd
+    rho = !git fo && git rhoc && git mods
+    rhu = !git fet && git rhuc && git mods
+    rhoc = "!git reset --hard origin/$(git branch-name)"
+    rhuc = "!git reset --hard $(git upstream-name)"
+    pushy = "!git push origin $(git branch-name)"
+    pushyf = "!git push origin $(git branch-name) --force"
+    pully = !git pull --ff-only origin $(git branch-name) && git mods
+    pullr = !git pull --rebase origin $(git branch-name) && git mods
+    pod = push origin --delete
+    del = "!f() { git pod $@; git brd $@; }; f"
+
+    rv = revert
+    rva = revert --abort
+    rvc = revert --continue
+
+    ### Merge/Rebase
+    ours = "!f() { git co --ours $@ && git add $@; }; f"
+    theirs = "!f() { git co --theirs $@ && git add $@; }; f"
+    mg = merge
+    mga = merge --abort
+    mgc = commit
+    rb = rebase
+    rbh = "!f() { git rebase -i HEAD~$@; }; f"
+    rbom = !git fet && git rebase origin/master
+    rba = rebase --abort
+    rbc = rebase --continue
+    rbs = rebase --skip
+
+    ### Stash
+    sa = stash apply
+    sl = stash list
+    sp = stash pop
+    ss = stash save
+    ssu = stash save --keep-index
+    sd = stash drop
+    sh = stash show
+    shp = stash show -p
+
+    ### Submodules
+    mods = submodule update --init --recursive
+
+    ### Misc
+    # Common Search
+    f = "!git ls-files | grep -i"
+    # List Aliases
+    la = "!git config -l | grep alias | cut -c 7-"
+    # Purge the cache
+    thrash = !git rm --cached -r . && git rh
+    # Purge to local
+    purge = clean -xfd -e /**/.vscode
+    # Formatting
+    cf = clang-format
+    conf = config --global -e
+
+    commitcount = shortlog -ns origin/master
+	change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f"
+    
+[user]
+    name = Scott Fries
+    email = Scott@ScottFries.com
+[core]
+    autocrlf = input
+    excludesfile = ~/.gitignore
+    editor = code --wait --new-window
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[init]
+  defaultBranch = main
+[web]
+  browser = google-chrome
+[pull]
+  rebase = true
+    

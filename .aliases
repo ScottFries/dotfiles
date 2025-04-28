@@ -1,0 +1,23 @@
+# Environment
+alias path='echo $PATH'
+
+# File System
+alias die='rm -rf'
+alias disk_usage='sudo baobab'
+alias top_disk_usage='du -shx * | sort -rh | head -10'
+
+# System
+alias kms='sudo shutdown -h now'
+alias fml='sudo reboot'
+alias sleep='sudo hibernate'
+alias window-class='xprop | grep -i class'
+alias smi='nvidia-smi -l 1'
+
+# Applications
+alias py='python3'
+alias prune-docker='docker image prune -a --force --filter "until=588h"'
+
+alias fuck='eval $(thefuck $(fc -ln -1 | tail -n 1)); fc -R'
+
+# Ubuntu
+alias refresh-key='sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys'
