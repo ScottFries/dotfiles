@@ -1,5 +1,7 @@
 # Environment
 alias path='echo $PATH'
+alias projects='cd ~/Projects'
+alias hl='cd ~/Projects/homelab'
 
 # File System
 alias die='rm -rf'

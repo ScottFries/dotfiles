@@ -155,3 +155,6 @@
 [pull]
   rebase = true
     
+[credential "https://gitlab.scottfries.com"]
+	helper = 
+	helper = !/usr/bin/glab auth git-credential

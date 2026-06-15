@@ -46,3 +46,7 @@ function reportcard()
     # e.g. reportcard "Scott Fries" "1 Jan, 2018"
     if [ "$2" ]; then gitstats "$1" "$2"; else gitstats "$1"; fi
 }
+
+# Created by `pipx` on 2026-01-31 19:41:46
+export PATH="$PATH:/home/yinandyangfang/.local/bin:/home/yinandyangfang/apps"
+export SECONDARY="/media/yinandyangfang/secondary"
